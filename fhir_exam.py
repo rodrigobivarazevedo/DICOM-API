@@ -31,12 +31,12 @@ def get_all_metadata():
 get_dcm_metadata('dicom')
 # or 
 
-from fastapi.responses import JSONResponse
+#from fastapi.responses import JSONResponse
 
-@app.get("/json")
-def get_all_metadata():
-    metadata = get_dcm_metadata("dicom")
-    return JSONResponse(content=metadata)
+#@app.get("/json")
+#def get_all_metadata():
+  #  metadata = get_dcm_metadata("dicom")
+   # return JSONResponse(content=metadata)
 
 # b) Create a route (/json) and add a link to the actual image on disk to the metadata:
 
