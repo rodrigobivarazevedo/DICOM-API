@@ -1,0 +1,7 @@
+fastapi==0.68.0
+uvicorn==0.15.0
+numpy==1.19.5
+Pillow==8.3.1
+pydicom==2.2.0
+pydantic==1.8.2
+fhir.resources==5.0.0
