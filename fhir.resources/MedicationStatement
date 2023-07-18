@@ -1,0 +1,61 @@
+{
+  "resourceType": "MedicationStatement",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns='https://www.w3.org/1999/xhtml'>buspirone 5mg TDS</div>"
+  },
+  "medicationCodeableConcept": {
+    "coding": [
+      {
+        "code": "321323009",
+        "system": "https://snomed.info/sct",
+        "display": "buspirone 5mg",
+        "path": "medicationCodeableConcept"
+      }
+    ]
+  },
+  "status": "active",
+  "reasonCode": [
+    {
+      "coding": [
+        {
+          "code": "19748006",
+          "system": "https://snomed.info/sct",
+          "display": "anxiety disorder",
+          "path": "reasonCode"
+        }
+      ],
+      "text": "anxiety disorder"
+    }
+  ],
+  "dosage": [
+    {
+      "text": "3 times daily",
+      "timing": {
+        "repeat": {
+          "frequency": 3,
+          "period": 1,
+          "periodUnit": "d"
+        }
+      },
+      "doseAndRate": [
+        {
+          "doseQuantity": {
+            "value": 1,
+            "system": "https://snomed.info/sct",
+            "unit": "tablet",
+            "code": "428673006"
+          }
+        }
+      ]
+    }
+  ],
+  "id": "124095",
+  "subject": {
+    "reference": "Patient/124060"
+  },
+  "meta": {
+    "lastUpdated": "2023-06-20T16:59:31Z",
+    "versionId": "1"
+  }
+}
