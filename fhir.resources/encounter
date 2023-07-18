@@ -1,0 +1,63 @@
+{
+  "resourceType": "Encounter",
+  "id": "124100",
+  "status": "finished",
+  "diagnosis": [
+    {
+      "condition": {
+        "reference": "Condition/124067"
+      }
+    },
+    {
+      "condition": {
+        "reference": "Condition/124073"
+      }
+    },
+    {
+      "condition": {
+        "reference": "Condition/124066"
+      }
+    },
+    {
+      "condition": {
+        "reference": "Condition/124071"
+      }
+    }
+  ],
+  "subject": {
+    "reference": "Patient/124060"
+  },
+  "class": {
+    "system": "https://terminology.hl7.org/CodeSystem/v3-ActCode",
+    "code": "AMB"
+  },
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns='https://www.w3.org/1999/xhtml'>Jun 12th 2023 for Sore throat</div>"
+  },
+  "reasonCode": [
+    {
+      "text": "Sore throat"
+    }
+  ],
+  "type": [
+    {
+      "text": "Primary care visit"
+    }
+  ],
+  "period": {
+    "start": "2023-06-12T16:59:28.875Z"
+  },
+  "participant": [
+    {
+      "individual": {
+        "reference": "Practitioner/124062",
+        "display": "Joseph Jones"
+      }
+    }
+  ],
+  "meta": {
+    "lastUpdated": "2023-06-20T16:59:31Z",
+    "versionId": "1"
+  }
+}
