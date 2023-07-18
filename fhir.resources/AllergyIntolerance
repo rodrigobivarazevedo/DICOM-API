@@ -1,0 +1,55 @@
+{
+    "resourceType": "AllergyIntolerance",
+    "id": "2019731",
+    "meta": {
+        "versionId": "1",
+        "lastUpdated": "2017-01-12T11:43:22.953-05:00"
+    },
+    "patient": {
+        "reference": "Patient/2019653"
+    },
+    "reporter": {
+        "reference": "Patient/2019653"
+    },
+    "status": "active-confirmed",
+    "criticality": "low",
+    "type": "allergy",
+    "reaction": [
+        {
+            "substance": {
+                "coding": [
+                    {
+                        "system": "http://snomed.info/ct",
+                        "code": "256349002",
+                        "display": "peanuts"
+                    }
+                ],
+                "text": "peanuts"
+            },
+            "certainty": "likely",
+            "manifestation": [
+                {
+                    "coding": [
+                        {
+                            "system": "http://snomed.info/ct",
+                            "code": "422587007",
+                            "display": "rash"
+                        }
+                    ],
+                    "text": "rash"
+                }
+            ],
+            "severity": "severe",
+            "exposureRoute": {
+                "coding": [
+                    {
+                        "system": "http://snomed.info/ct",
+                        "code": "26643006",
+                        "display": "oral"
+                    }
+                ],
+                "text": "Oral Route"
+            }
+        }
+    ]
+}
