@@ -1,0 +1,111 @@
+{
+  "resourceType": "Bundle",
+  "type": "bundle",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "name": [
+          {
+            "use": "official",
+            "family": "Walker",
+            "given": [
+              "Jasmine"
+            ],
+            "text": "Jasmine Walker"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "2023-06-20",
+        "identifier": [
+          {
+            "system": "https://clinfhir.com/fhir/NamingSystem/identifier",
+            "value": "AZEVEDO"
+          }
+        ],
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns='https://www.w3.org/1999/xhtml'>Jasmine Walker</div>"
+        },
+        "id": "124060",
+        "meta": {
+          "lastUpdated": "2023-06-20T16:59:31Z",
+          "versionId": "1"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns='https://www.w3.org/1999/xhtml'>Asthma</div>"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "https://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active",
+              "path": "clinicalStatus"
+            }
+          ]
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "https://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed",
+              "path": "verificationStatus"
+            }
+          ]
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "code": "14657009",
+                "system": "https://snomed.info/sct",
+                "display": "Diagnosis",
+                "path": "category"
+              }
+            ],
+            "text": "Diagnosis"
+          }
+        ],
+        "severity": {
+          "coding": [
+            {
+              "code": "6736007",
+              "system": "https://snomed.info/sct",
+              "display": "mild to moderate",
+              "path": "severity"
+            }
+          ],
+          "text": "mild to moderate"
+        },
+        "code": {
+          "coding": [
+            {
+              "code": "195917001",
+              "system": "https://snomed.info/sct",
+              "display": "asthma",
+              "path": "code"
+            }
+          ],
+          "text": "asthma"
+        },
+        "onsetAge": {
+          "value": 14,
+          "code": "a",
+          "system": "https://unitsofmeasure.org"
+        },
+        "id": "124064",
+        "subject": {
+          "reference": "Patient/124060"
+        },
+        "meta": {
+          "lastUpdated": "2023-06-20T16:59:31Z",
+          "versionId": "1"
+        }
+      }
+    }
