@@ -6,10 +6,10 @@ import numpy as np
 from PIL import Image
 from fastapi.staticfiles import StaticFiles
 from pydicom import dcmread
-from typing import List, Dict, Any
+from typing import  Any
 from fastapi.responses import HTMLResponse
+from fastapi import HTTPException
 from datetime import datetime
-import os
 from pydantic import BaseModel
 from fhir.resources.imagingstudy import ImagingStudy
 from fhir.resources.reference import Reference
@@ -67,17 +67,20 @@ dicom_to_img("dicom/")
 
 
 
+# Function to get DICOM files from a directory
 def get_dcm_files(mypath):
     dcm_files = []
     for dcm_filename in [f for f in listdir(mypath) if isfile(join(mypath, f))]:
         dcm_files.append(dcmread(f"{mypath}/{dcm_filename}"))
     return dcm_files
 
+# Function to format date in the desired format
 def format_date(date_str):
     if date_str:
         return datetime.strptime(date_str, '%Y%m%d').strftime('%B %d, %Y')
     return None
 
+# Function to generate HTML grid with DICOM image metadata
 def generate_html_grid(dcm_files):
     grid_html = "<html><body><h1>DICOM Image Overview</h1><div style='display: grid; grid-template-columns: repeat(3, 300px); grid-gap: 20px;'>"
     for dcm_file in dcm_files:
@@ -90,35 +93,40 @@ def generate_html_grid(dcm_files):
     return grid_html
 
 
-
+# Route to display HTML overview of all DICOM images
 @app.get("/", response_class=HTMLResponse)
 def overview_html():
     dcm_files = get_dcm_files("dicom/")
     return generate_html_grid(dcm_files)
 
+# Route to display HTML overview of DICOM images filtered by patient ID
 @app.get("/patient/{patient_id}", response_class=HTMLResponse)
 def patient_images_html(patient_id: str):
     dcm_files = get_dcm_files("dicom/")
     
-    filtered_metadata = [dcm_obj for dcm_obj in  dcm_files if dcm_obj.get("PatientID") == patient_id]
+    filtered_metadata = [dcm_obj for dcm_obj in dcm_files if dcm_obj.get("PatientID") == patient_id]
     if not filtered_metadata:
         raise HTTPException(status_code=404, detail="Patient not found")
     return generate_html_grid(filtered_metadata)
 
-
-
+# Route to get all DICOM metadata in JSON format
 @app.get("/api", response_model=list[dict])
 def get_all_metadata():
     dcm_files = get_dcm_files("dicom/")
     
-    metadata = []
-    for file in dcm_files:
-        metadata.append(file.to_json())
-    if not metadata:
-        raise HTTPException(status_code=404, detail="Patient not found")
-    return JSONResponse(content=metadata)
+    metadata_list = []
+    for dcm_obj in dcm_files:
+        metadata = PatientMetadata(
+            PatientID=dcm_obj.get("PatientID"),
+            Age=dcm_obj.get("Age"),
+            StudyDate=format_date(dcm_obj.get("StudyDate"))
+        )
+        metadata_list.append(metadata)
+    if not metadata_list:
+        raise HTTPException(status_code=404, detail="No Patients found")
+    return metadata_list
 
-
+# Route to get metadata of a patient in JSON format
 @app.get("/api/patient/{patient_id}", response_class=JSONResponse)
 def get_patient_metadata(patient_id: str):
     dcm_files = get_dcm_files("dicom/")
@@ -129,13 +137,16 @@ def get_patient_metadata(patient_id: str):
         metadata = PatientMetadata(
             PatientID=dcm_obj.get("PatientID"),
             Age=dcm_obj.get("Age"),
-            StudyDate = format_date(dcm_obj.get("StudyDate"))
+            StudyDate=format_date(dcm_obj.get("StudyDate"))
         )
         metadata_list.append(metadata)
-    return metadata
+    if not metadata_list:
+        raise HTTPException(status_code=404, detail="Patient not found")
     
-    
+    return metadata_list
 
+
+# Route to get DICOM metadata in FHIR format
 @app.get("/apifhir", response_model=list[ImagingStudy])
 def get_all_metadata():
     dcm_files = get_dcm_files("dicom/")
@@ -154,31 +165,3 @@ def get_all_metadata():
     return metadata
 
 
-
-def check_image_name_mismatches(dcm_files, image_folder):
-    mismatches = []
-    for file in dcm_files:
-        patient_id = file.get("PatientID")
-        if not patient_id:
-            continue
-
-        image_name = f"{patient_id}.png"
-        image_path = join(image_folder, image_name)
-        if not isfile(image_path):
-            mismatches.append((patient_id, image_name))
-
-    return mismatches
-
-def fix_image_names(mismatches, image_folder):
-    for  patient_id, image_name in mismatches:
-        old_path = join(image_folder, image_name)
-        new_name = f"{patient_id}.png"
-        new_path = join(image_folder, new_name)
-        os.rename(old_path, new_path)
-
-#'dicom/' folder with DICOM files and 'images/' folder for the images.
-dcm_files = get_dcm_files("dicom/")
-image_folder = "images/"
-mismatches = check_image_name_mismatches(dcm_files, image_folder)
-if mismatches:
-    fix_image_names(mismatches, image_folder)
