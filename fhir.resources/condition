@@ -1,0 +1,73 @@
+{
+  "resourceType": "Condition",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns='https://www.w3.org/1999/xhtml'>Depression</div>"
+  },
+  "clinicalStatus": {
+    "coding": [
+      {
+        "system": "https://terminology.hl7.org/CodeSystem/condition-clinical",
+        "code": "active",
+        "path": "clinicalStatus"
+      }
+    ]
+  },
+  "verificationStatus": {
+    "coding": [
+      {
+        "system": "https://terminology.hl7.org/CodeSystem/condition-ver-status",
+        "code": "confirmed",
+        "path": "verificationStatus"
+      }
+    ]
+  },
+  "category": [
+    {
+      "coding": [
+        {
+          "code": "14657009",
+          "system": "https://snomed.info/sct",
+          "display": "Diagnosis",
+          "path": "category"
+        }
+      ],
+      "text": "Diagnosis"
+    }
+  ],
+  "severity": {
+    "coding": [
+      {
+        "code": "6736007",
+        "system": "https://snomed.info/sct",
+        "display": "moderate",
+        "path": "severity"
+      }
+    ],
+    "text": "Moderate"
+  },
+  "code": {
+    "coding": [
+      {
+        "code": "35489007",
+        "system": "https://snomed.info/sct",
+        "display": "depression",
+        "path": "code"
+      }
+    ],
+    "text": "depression"
+  },
+  "onsetAge": {
+    "value": 74,
+    "code": "a",
+    "system": "https://unitsofmeasure.org"
+  },
+  "id": "124067",
+  "subject": {
+    "reference": "Patient/124060"
+  },
+  "meta": {
+    "lastUpdated": "2023-06-20T16:59:31Z",
+    "versionId": "1"
+  }
+}
