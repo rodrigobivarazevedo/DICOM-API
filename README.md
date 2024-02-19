@@ -16,7 +16,7 @@ The app provides FHIR data via the routes:
 ### How the app works
 
 - save your dicom encoded data in the dicom folder
-- after running the app, the dicom data is processed and the correspondent imaging is generated and uploaded to the images folder
+- after running the app, the dicom data is processed and the correspondent imaging of each dicom file is generated and uploaded to the images folder
 - after the processing is complete the main page displays an overview of the dataset
 - accessing different routes allows the user to get more detailed info about the data
 
