@@ -9,3 +9,4 @@
     "forwardPorts": [80],
     "postCreateCommand": "/bin/sh -c 'uvicorn app.main:app --reload'"
 }
+
