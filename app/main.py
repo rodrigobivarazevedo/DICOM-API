@@ -36,8 +36,7 @@ class ImagingStudy(BaseModel):
     meta: Meta
 
 def dicom_to_img(mypath):
-    # Create a directory to store the images if it doesn't exista
-
+    
     for filename in listdir(mypath):
             # Read the DICOM file
             ds = dcmread(mypath+filename)
@@ -63,7 +62,7 @@ def dicom_to_img(mypath):
             # Save the image as PNG format
             image.save(f"images/{ds.PatientID}.png")
 
-dicom_to_img("dicom/")
+dicom_to_img("dicoms/")
 
 
 # Function to get DICOM files from a directory
