@@ -1,6 +1,6 @@
 {
     "name": "FastAPI-Dev-Container",
-    "image": "python:3.10.10",
+    "image": "python:3.12.1",
     "dockerFile": "../app/DOCKERFILE",
     "extensions": ["ms-python.python"],
     "settings": {
