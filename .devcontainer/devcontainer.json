@@ -6,5 +6,5 @@
         "terminal.integrated.shell.linux": "/bin/sh"
     },
     "forwardPorts": [5000],
-    "postCreateCommand": "/bin/sh -c 'uvicorn main:app --host 0.0.0.0 --port 5000 --reload'"
+    "postCreateCommand": "/bin/sh -c 'uvicorn main:app --reload'"
 }
