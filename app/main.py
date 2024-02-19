@@ -66,7 +66,6 @@ def dicom_to_img(mypath):
 dicom_to_img("dicom/")
 
 
-
 # Function to get DICOM files from a directory
 def get_dcm_files(mypath):
     dcm_files = []

@@ -1,0 +1,11 @@
+{
+    "name": "FastAPI-Dev-Container",
+    "image": "python:3.10.10",
+    "dockerFile": "../app/DOCKERFILE",
+    "extensions": ["ms-python.python"],
+    "settings": {
+        "terminal.integrated.shell.linux": "/bin/sh"
+    },
+    "forwardPorts": [5000],
+    "postCreateCommand": "/bin/sh -c 'uvicorn main:app --reload'"
+  }
