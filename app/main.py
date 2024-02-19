@@ -6,7 +6,7 @@ import numpy as np
 from PIL import Image
 from fastapi.staticfiles import StaticFiles
 from pydicom import dcmread
-from typing import  Any
+from typing import  Any, List
 from fastapi.responses import HTMLResponse
 from fastapi import HTTPException
 from datetime import datetime
@@ -110,7 +110,7 @@ def patient_images_html(patient_id: str):
     return generate_html_grid(filtered_metadata)
 
 # Route to get all DICOM metadata in JSON format
-@app.get("/api", response_model=list[dict])
+@app.get("/api", response_class=JSONResponse)
 def get_all_metadata():
     dcm_files = get_dcm_files("dicom/")
     
@@ -122,9 +122,12 @@ def get_all_metadata():
             StudyDate=format_date(dcm_obj.get("StudyDate"))
         )
         metadata_list.append(metadata)
+    
     if not metadata_list:
-        raise HTTPException(status_code=404, detail="No Patients found")
+        raise HTTPException(status_code=404, detail="Patient not found")
+    
     return metadata_list
+
 
 # Route to get metadata of a patient in JSON format
 @app.get("/api/patient/{patient_id}", response_class=JSONResponse)
@@ -154,7 +157,7 @@ def get_all_metadata():
     metadata = []
     for file in dcm_files:
         imaging_study = ImagingStudy(
-            status="preliminary",  # Provide a valid status value
+            status="preliminary",  
             id=file.SOPInstanceUID,
             patient=Reference(reference=f"Patient/{file.PatientID}"),
             started=format_date(file.StudyDate),
