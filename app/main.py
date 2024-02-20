@@ -22,7 +22,8 @@ templates = Jinja2Templates(directory="templates")
 
 class PatientMetadata(BaseModel):
     PatientID: str
-    Age: Any
+    Age: int
+    Sex: str
     StudyDate: str
 
 class Reference(BaseModel):
@@ -53,7 +54,7 @@ def format_date(date_str):
 
 # Function to generate HTML grid with DICOM image metadata
 def generate_html_grid(dcm_files):
-    grid_html = "<html><body><h1>DICOM Image Overview</h1><div style='display: grid; grid-template-columns: repeat(3, 300px); grid-gap: 20px;'>"
+    grid_html = "<html><body><h3>DICOM Image Overview</h3><div style='display: grid; grid-template-columns: repeat(3, 300px); grid-gap: 20px;'>"
     for dcm_file in dcm_files:
         patient_id = dcm_file.get("PatientID")
         date_str = format_date(dcm_file.get("StudyDate"))
@@ -95,11 +96,11 @@ def get_all_metadata():
     for dcm_obj in dcm_files:
         metadata = PatientMetadata(
             PatientID=dcm_obj.get("PatientID"),
-            Age=dcm_obj.get("Age"),
+            Age=int((dcm_obj.get("PatientAge")).rstrip('Y')),
+            Sex=dcm_obj.get("PatientSex"),
             StudyDate=format_date(dcm_obj.get("StudyDate"))
         )
         metadata_list.append(metadata)
-    
     if not metadata_list:
         raise HTTPException(status_code=404, detail="Patient not found")
     
@@ -116,7 +117,8 @@ def get_patient_metadata(patient_id: str):
     for dcm_obj in filtered_metadata:
         metadata = PatientMetadata(
             PatientID=dcm_obj.get("PatientID"),
-            Age=dcm_obj.get("Age"),
+            Age=int((dcm_obj.get("PatientAge")).rstrip('Y')),
+            Sex=dcm_obj.get("PatientSex"),
             StudyDate=format_date(dcm_obj.get("StudyDate"))
         )
         metadata_list.append(metadata)

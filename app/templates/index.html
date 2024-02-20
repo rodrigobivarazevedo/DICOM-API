@@ -6,48 +6,43 @@
     <title>DICOM API Interface</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .btn-black {
+            background-color: black;
+            border-color: black;
+            color: white; /* Set text color to white */
+        }
+    
+        .btn-black:hover {
+            background-color: #333; /* Change the hover background color if needed */
+            border-color: #333; /* Change the hover border color if needed */
+            color: white; /* Set text color to white */
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
+    <div class="container-fluid mt-5">
         <h1 class="mb-4">DICOM API Interface</h1> 
         <div class="row">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <h3>Get All DICOM Metadata</h3>
-                <button class="btn btn-primary" onclick="getAllMetadata()">Get all Metadata</button>
-                <a href="/overview" class="btn btn-primary" target="_blank">View full dataset Images</a>
+                <button class="btn btn-black mt-3" onclick="getAllMetadata()">Get all Metadata</button>
+                <a href="/overview" class="btn btn-black mt-3" target="_blank">View full dataset Images</a>
                 <div class="mt-5" id="all-metadata"></div>
             </div>
-            <div class="col-md-6">
-                <h3>Get Metadata of a Specific Patient</h3>
-                    <form onsubmit="return false;">
-                        <div class="form-group">
-                            <label for="patient-id-json">Patient ID:</label>
-                            <input type="text" class="form-control" id="patient-id-json-input" placeholder="Enter Patient ID">
-                        </div>
-                        <button class="btn btn-primary" onclick="getPatientMetadata()">Get Metadata</button>
-                    </form>
-                <div class="mt-5" id="patient-metadata"></div>
-
-                <div class="row mt-4">
-                    <div class="col">
-                        <h3>View DICOM Images for a Specific Patient</h3>
+            <div class="col-md-8">
+                <h3>View DICOM Images for a Specific Patient</h3>
                         <form onsubmit="return false;">
                             <div class="form-group">
                                 <label for="patient-id">Patient ID:</label>
-                                <input type="text" class="form-control" id="patient-id-input" placeholder="Enter Patient ID">
+                                <input type="text" class="form-control" id="patient-id-input" placeholder="Enter Patient ID" style="width: 150px;">
                             </div>
-                            <button class="btn btn-primary" onclick="getPatientImages()">Get Images</button>
+                            <button class="btn btn-black" onclick="getPatientImages()">Get Images</button>
                         </form>
-                    </div>
-                </div>
-                <div class="mt-4" id="patient-images"></div>
-            </div>
-
-           
-        </div>
-        
-        
-        
+                <div class="mt-4 col-md-6" id="patient-metadata"></div>
+                <div class="mt-4" id="patient-images"></div> 
+            </div>  
+        </div>    
     </div>
 
     <!-- Bootstrap JS -->
@@ -67,71 +62,68 @@
         }
     }
 
-    function displayAllMetadata(metadata) {
-        const metadataDiv = document.getElementById('all-metadata');
-        metadataDiv.innerHTML = ''; // Clear existing content
+        function displayAllMetadata(metadata) {
+            const metadataDiv = document.getElementById('all-metadata');
+            metadataDiv.innerHTML = ''; // Clear existing content
 
-        if (metadata.length === 0) {
-            metadataDiv.innerHTML = '<p>No metadata found.</p>';
-            return;
-        }
+            if (metadata.length === 0) {
+                metadataDiv.innerHTML = '<p>No metadata.</p>';
+                return;
+            }
 
-        const table = document.createElement('table');
-        table.classList.add('table', 'table-striped');
+            const table = document.createElement('table');
+            table.classList.add('table', 'table-striped');
 
-        // Create table header
-        const tableHeader = document.createElement('thead');
-        const headerRow = document.createElement('tr');
-        const headers = Object.keys(metadata[0]); // Assuming all objects have the same keys
-        headers.forEach(headerText => {
-            const th = document.createElement('th');
-            th.textContent = headerText;
-            headerRow.appendChild(th);
-        });
-        tableHeader.appendChild(headerRow);
-        table.appendChild(tableHeader);
-
-        // Create table body
-        const tableBody = document.createElement('tbody');
-        metadata.forEach(item => {
-            const row = document.createElement('tr');
-            headers.forEach(header => {
-                const td = document.createElement('td');
-                td.textContent = item[header];
-                row.appendChild(td);
+            // Create table header
+            const tableHeader = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            const headers = Object.keys(metadata[0]); // Assuming all objects have the same keys
+            headers.forEach(headerText => {
+                const th = document.createElement('th');
+                th.textContent = headerText;
+                headerRow.appendChild(th);
             });
-            tableBody.appendChild(row);
-        });
-        table.appendChild(tableBody);
+            tableHeader.appendChild(headerRow);
+            table.appendChild(tableHeader);
 
-        metadataDiv.appendChild(table);
-    }
+            // Create table body
+            const tableBody = document.createElement('tbody');
+            metadata.forEach(item => {
+                const row = document.createElement('tr');
+                headers.forEach(header => {
+                    const td = document.createElement('td');
+                    td.textContent = item[header];
+                    row.appendChild(td);
+                });
+                tableBody.appendChild(row);
+            });
+            table.appendChild(tableBody);
+
+            metadataDiv.appendChild(table);
+        }
 
     
         async function getPatientImages() {
-            const patientId = document.getElementById('patient-id-input').value;
-            try {
-                const response = await fetch(`/patient/${patientId}`);
-                const data = await response.text();
-                const imagesDiv = document.getElementById('patient-images');
-                imagesDiv.innerHTML = data;
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
+        const patientId = document.getElementById('patient-id-input').value;
 
-
-
-        async function getPatientMetadata() {
-        const patientId = document.getElementById('patient-id-json-input').value;
         try {
             const response = await fetch(`/api/patient/${patientId}`);
-            const data = await response.json();
-            displayPatientMetadata(data);
+            const response2 = await fetch(`/patient/${patientId}`);
+            if (response.ok && response2.ok) {
+                const data = await response.json();
+                const data2 = await response2.text();
+                displayPatientMetadata(data);
+                const imagesDiv = document.getElementById('patient-images');
+                imagesDiv.innerHTML = data2;
+            } else {
+                const metadataDiv = document.getElementById('patient-metadata');
+                metadataDiv.innerHTML = '<p>Patient not found.</p>';
+            }
         } catch (error) {
             console.error('Error:', error);
         }
     }
+
 
     function displayPatientMetadata(metadata) {
         const metadataDiv = document.getElementById('patient-metadata');
@@ -148,7 +140,7 @@
         // Create table header
         const tableHeader = document.createElement('thead');
         const headerRow = document.createElement('tr');
-        const headers = ['Patient ID', 'Age', 'Study Date'];
+        const headers = ['Patient ID', 'Age', "Sex", 'Study Date'];
         headers.forEach(headerText => {
             const th = document.createElement('th');
             th.textContent = headerText;
@@ -161,7 +153,7 @@
         const tableBody = document.createElement('tbody');
         metadata.forEach(patient => {
             const row = document.createElement('tr');
-            const cells = ['PatientID', 'Age', 'StudyDate'];
+            const cells = ['PatientID', 'Age', "Sex", 'StudyDate'];
             cells.forEach(cellKey => {
                 const td = document.createElement('td');
                 td.textContent = patient[cellKey];
