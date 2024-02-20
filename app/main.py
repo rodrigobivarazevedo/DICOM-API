@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from os import listdir
 from os.path import isfile, join
 from fastapi.responses import JSONResponse
@@ -14,9 +14,11 @@ from pydantic import BaseModel
 from fhir.resources.imagingstudy import ImagingStudy
 from fhir.resources.reference import Reference
 from fhir.resources.meta import Meta
+from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
 app.mount("/images", StaticFiles(directory="images"), name="images")
+templates = Jinja2Templates(directory="templates")
 
 class PatientMetadata(BaseModel):
     PatientID: str
@@ -34,35 +36,6 @@ class ImagingStudy(BaseModel):
     patient: Reference
     started: str
     meta: Meta
-
-def dicom_to_img(mypath):
-    
-    for filename in listdir(mypath):
-            # Read the DICOM file
-            ds = dcmread(mypath+filename)
-
-            # Extract the pixel data
-            pixel_data = ds.pixel_array
-
-            # Check if the pixel data is signed
-            if ds.PixelRepresentation == 1:
-                # Convert signed pixel data to unsigned
-                pixel_data = pixel_data + np.min(pixel_data)
-                pixel_data = pixel_data.astype(np.uint16)
-
-            # Check if the pixel data is using a non-standard photometric interpretation
-            if ds.PhotometricInterpretation != "RGB":
-                # Convert to grayscale
-                pixel_data = pixel_data * int(ds.RescaleSlope) + int(ds.RescaleIntercept)
-                pixel_data = pixel_data.astype(np.uint16)
-
-            # Create a PIL Image object
-            image = Image.fromarray(pixel_data)
-
-            # Save the image as PNG format
-            image.save(f"images/{ds.PatientID}.png")
-
-dicom_to_img("dicoms/")
 
 
 # Function to get DICOM files from a directory
@@ -91,8 +64,14 @@ def generate_html_grid(dcm_files):
     return grid_html
 
 
-# Route to display HTML overview of all DICOM images
+
 @app.get("/", response_class=HTMLResponse)
+async def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
+
+# Route to display HTML overview of all DICOM images
+@app.get("/overview", response_class=HTMLResponse)
 def overview_html():
     dcm_files = get_dcm_files("dicom/")
     return generate_html_grid(dcm_files)
